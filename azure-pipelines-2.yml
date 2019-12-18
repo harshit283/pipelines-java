@@ -1,0 +1,53 @@
+# Maven
+# Build your Java project and run tests with Apache Maven.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/java
+
+
+stages:
+- stage: Build_Source_Code # Build Source Code for Dotnet Core Web App
+  jobs:
+  - job: Build
+    pool:
+      vmImage: 'ubuntu-latest'
+
+    steps:
+    - task: Maven@3
+      inputs:
+        mavenPomFile: 'pom.xml'
+        mavenOptions: '-Xmx3072m'
+        javaHomeOption: 'JDKVersion'
+        jdkVersionOption: '1.8'
+        jdkArchitectureOption: 'x64'
+        publishJUnitResults: true
+        testResultsFiles: '**/surefire-reports/TEST-*.xml'
+        goals: 'package'
+
+
+    - task: CopyFiles@1
+      inputs:
+        sourceFolder: '$(Build.SourcesDirectory)' 
+        targetFolder: '$(Build.ArtifactStagingDirectory)'
+
+    - task: PublishBuildArtifacts@1
+      inputs:
+        pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        
+
+- stage: Deploy_In_Prod 
+  jobs:
+  - deployment: azure_web_app_prod
+    pool: 'ubuntu-latest'
+    variables:
+      WebAppName: 'multistage-yaml'
+    environment: 'prod-environment'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: AzureRMWebAppDeployment@4
+            displayName: Azure App Service Deploy
+            inputs:
+              WebAppKind: webApp
+              ConnectedServiceName: 'haaggarw-test-connection'
+              Package: $(System.DefaultWorkingDirectory)/_harshit283.pipelines-java/drop
