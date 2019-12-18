@@ -47,5 +47,5 @@ stages:
             inputs:
               WebAppKind: webApp
               WebAppName: $(WebAppName)
-              ConnectedServiceName: 'haaggarw-test-connection'
-              Package: $(System.DefaultWorkingDirectory)/_harshit283.pipelines-java/drop
+              ConnectedServiceName: 'haaggarw-new-test-connection'
+              Package: $(System.WorkFolder)/_harshit283.pipelines-java/drop
