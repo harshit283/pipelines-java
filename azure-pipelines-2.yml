@@ -9,7 +9,7 @@ stages:
   jobs:
   - job: Build
     pool:
-      vmImage: 'Hosted VS2017'
+      vmImage: 'ubuntu-latest'
 
     steps:
     - task: Maven@3
@@ -37,7 +37,7 @@ stages:
 - stage: Deploy_In_Prod 
   jobs:
   - deployment: azure_web_app_prod
-    pool: 'Hosted VS2017'
+    pool: 'ubuntu-latest'
     variables:
       WebAppName: 'multistage-yaml'
     environment: 'prod-environment'
