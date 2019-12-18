@@ -30,6 +30,7 @@ stages:
     - task: PublishBuildArtifacts@1
       inputs:
         pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        ArtifactName: drop
         
 
 - stage: Deploy_In_Prod 
@@ -42,12 +43,13 @@ stages:
       runOnce:
         deploy:
           steps:
+          - powershell: ls -r $(Pipeline.workspace)
           - task: AzureRMWebAppDeployment@4
             displayName: Azure App Service Deploy
             inputs:
               WebAppKind: webApp
               WebAppName: $(WebAppName)
               ConnectedServiceName: 'haaggarw-new-test-connection'
-              packageForLinux: '$(System.DefaultWorkingDirectory)/_harshit283.pipelines-java/drop'
+              packageForLinux: '$(Pipeline.workspace)/drop'
 
               
