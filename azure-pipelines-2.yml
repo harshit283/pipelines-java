@@ -46,5 +46,6 @@ stages:
             displayName: Azure App Service Deploy
             inputs:
               WebAppKind: webApp
+              WebAppName: $(WebAppName)
               ConnectedServiceName: 'haaggarw-test-connection'
               Package: $(System.DefaultWorkingDirectory)/_harshit283.pipelines-java/drop
